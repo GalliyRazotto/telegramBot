@@ -18,10 +18,6 @@ bot = Bot(TOKEN)
 dp = Dispatcher(bot, storage=storage)
 
 
-# TODO вроде не используется, но возможно будет удобней from enum import Enum
-COMMANDS = ['add', 'request']
-
-
 class FSMAdmin(StatesGroup):
     word = State()
 

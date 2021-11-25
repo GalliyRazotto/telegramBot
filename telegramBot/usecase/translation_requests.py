@@ -11,7 +11,6 @@ class Word:
 def word_translation(word: str):
     translator = googletrans.Translator()
 
-    # TODO аккуратней будет так:
     destination = 'ru'
     if "en" not in translator.detect(word).lang:
         destination = 'en'

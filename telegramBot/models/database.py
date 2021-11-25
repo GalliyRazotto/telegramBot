@@ -17,5 +17,4 @@ Base = declarative_base(bind=engine, cls=Base)
 
 session_factory = sessionmaker(bind=engine)
 Session = scoped_session(session_factory)
-with Session as s:
-    s.query()
+
