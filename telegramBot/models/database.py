@@ -9,7 +9,7 @@ class Base:
     def __tablename__(cls):
         return f"bot_{cls.__name__.lower()}s"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
 
 engine = create_engine("postgresql://user:password@localhost:5432/telegramBot", echo=True)

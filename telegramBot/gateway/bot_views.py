@@ -52,6 +52,3 @@ async def echo(message: types.Message):
         reply_markup=kb_client,
     )
 
-
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
