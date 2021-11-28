@@ -6,10 +6,10 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
-from telegramBot.keyboards.client_keyboard import kb_client
+from telegram_bot.keyboards.client_keyboard import kb_client
 
 from bot_config import TOKEN
-import telegramBot.usecase.add_words_users as usecase
+import telegram_bot.usecase.add_words_users as usecase
 
 logging.basicConfig(level=logging.INFO)
 storage = MemoryStorage()
@@ -19,25 +19,36 @@ dp = Dispatcher(bot, storage=storage)
 
 
 class FSMAdmin(StatesGroup):
-    word = State()
+    add_word = State()
+    request_word = State()
 
 
 @dp.message_handler(commands='add', state=None)
 async def cm_add_word(message: types.Message):
-    await FSMAdmin.word.set()
+    await FSMAdmin.add_word.set()
     await message.reply('Input word to translate')
 
 
-@dp.message_handler(content_types=['text'], state=FSMAdmin.word)
+@dp.message_handler(commands='request', state=None)
+async def request_word(message: types.Message):
+    user_name = message.from_user.first_name
+    msg = 'No words added to dictionary'
+    word = usecase.request_random_word(user_name)
+    if word:
+        msg = str(word.word)
+    await message.reply(msg)
+
+
+@dp.message_handler(content_types=['text'], state=FSMAdmin.add_word)
 async def pull_word(message: types.Message, state: FSMContext):
     word = message.text.lower()
     user_name = message.from_user.first_name
+    msg = 'Word already added'
     if usecase.add_new_word(word, user_name):
         async with state.proxy() as data:
-            data['word'] = message.text
-        await message.reply('Word added')
-    else:
-        await message.reply('Word already added')
+            data['word'] = word
+        msg = 'Word added'
+    await message.reply(msg)
     await state.finish()
 
 

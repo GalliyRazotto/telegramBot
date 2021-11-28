@@ -9,10 +9,10 @@ class Base:
     def __tablename__(cls):
         return f"bot_{cls.__name__.lower()}s"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True)
 
 
-engine = create_engine("postgresql://user:password@localhost:5432/telegramBot", echo=True)
+engine = create_engine("postgresql://user:password@localhost:5432/telegram_bot", echo=True)
 Base = declarative_base(bind=engine, cls=Base)
 
 session_factory = sessionmaker(bind=engine)
