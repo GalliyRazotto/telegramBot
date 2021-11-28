@@ -138,3 +138,5 @@ dmypy.json
 cython_debug/
 
 bot_config.py
+
+.idea/
