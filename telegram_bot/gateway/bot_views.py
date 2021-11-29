@@ -8,13 +8,13 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 from telegram_bot.keyboards.client_keyboard import kb_client
 
-from config_bot import TOKEN
+from config_bot import token
 import telegram_bot.usecase.add_words_users as usecase
 
 logging.basicConfig(level=logging.INFO)
 storage = MemoryStorage()
 
-bot = Bot(TOKEN)
+bot = Bot(token)
 dp = Dispatcher(bot, storage=storage)
 
 
@@ -34,10 +34,11 @@ async def pull_word(message: types.Message, state: FSMContext):
     word = message.text.lower()
     user_name = message.from_user.first_name
     msg = 'Word already added'
-    if usecase.add_new_word(word, user_name):
+    word_to_add = usecase.add_new_word(word, user_name)
+    if word_to_add:
         async with state.proxy() as data:
-            data['word'] = word
-        msg = 'Word added'
+            data['word'] = word_to_add.word
+        msg = 'Word added. Translation {}'.format(word_to_add.translation)
     await message.reply(msg)
     await state.finish()
 

@@ -35,7 +35,7 @@ def add_new_word(word: str, user_name: str):
         association = AssociationTable(id=0, word=word_to_add, user=user)
         s.add(association)
         s.commit()
-        return word
+        return association.word
 
 
 def request_random_word(user_name: str):
