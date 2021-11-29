@@ -137,6 +137,4 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-bot_config.py
-
 .idea/
