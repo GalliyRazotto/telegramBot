@@ -10,6 +10,7 @@ from telegram_bot.keyboards.client_keyboard import kb_client
 
 from config_bot import token
 import telegram_bot.usecase.add_words_users as usecase
+from telegram_bot.usecase.translation_requests import word_translation
 
 logging.basicConfig(level=logging.INFO)
 storage = MemoryStorage()
@@ -21,6 +22,7 @@ dp = Dispatcher(bot, storage=storage)
 class FSMAdmin(StatesGroup):
     add_word = State()
     request_word = State()
+    translate = State()
 
 
 @dp.message_handler(commands='add', state=None)
@@ -38,7 +40,7 @@ async def pull_word(message: types.Message, state: FSMContext):
     if word_to_add:
         async with state.proxy() as data:
             data['word'] = word_to_add.word
-        msg = 'Word added. Translation {}'.format(word_to_add.translation)
+        msg = 'Word added. Translation: {}'.format(word_to_add.translation)
     await message.reply(msg)
     await state.finish()
 
@@ -52,7 +54,7 @@ async def request_word(message: types.Message, state: FSMContext):
     if word:
         async with state.proxy() as data:
             data['word'] = word.translation
-            msg = f'Напишите перевод слова {word.word}'
+            msg = f'How do you translate: {word.word}'
     await message.reply(msg)
 
 
@@ -63,6 +65,24 @@ async def pull_word(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         if translation == data['word']:
             msg = 'Great! /request to try once more!'
+    await message.reply(msg)
+    await state.finish()
+
+
+@dp.message_handler(commands='translate', state=None)
+async def request_word(message: types.Message):
+    await FSMAdmin.translate.set()
+    msg = f'Write word to translate'
+    await message.reply(msg)
+
+
+@dp.message_handler(content_types=['text'], state=FSMAdmin.translate)
+async def pull_word(message: types.Message, state: FSMContext):
+    word = message.text.lower()
+    translated_word = word_translation(word)
+    msg = '404 translation not found'
+    if translated_word:
+        msg = 'Translated word: {}'.format(translated_word)
     await message.reply(msg)
     await state.finish()
 
