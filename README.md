@@ -1,4 +1,4 @@
-# telegramTranslationWordBot
+# Translation words telegramBot
 TelegramBot - бот для изучения слов английского языка.
 В перспективе сделать следующие функции:
  - добавление новых слов и их синонимов в словарь
