@@ -1,3 +1,3 @@
 import os
 
-token = os.environ['TOKEN']
+token = os.environ.get('TOKEN')

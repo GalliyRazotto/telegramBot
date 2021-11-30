@@ -8,7 +8,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 from telegram_bot.keyboards.client_keyboard import kb_client
 
-from config_bot import token
+from telegram_bot.config_bot import token
 import telegram_bot.usecase.add_words_users as usecase
 from telegram_bot.usecase.translation_requests import word_translation
 
