@@ -1,6 +1,7 @@
 from sqlalchemy import (
     Column,
     String,
+    Integer,
 )
 from sqlalchemy.orm import relationship
 
@@ -9,6 +10,7 @@ from telegram_bot.models.database import Base
 
 
 class User(Base, TimestampMixin):
+    user_id = Column(Integer, nullable=False, unique=True)
     name = Column(String(64), nullable=False, unique=True)
     word = relationship("AssociationTable", back_populates="user")
 

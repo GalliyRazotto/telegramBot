@@ -11,22 +11,22 @@ from telegram_bot.usecase.database_functions import get_user, get_word, get_user
 from telegram_bot.usecase.translation_requests import complete_word
 
 
-def add_new_user(telegram_nickname: str):
+def add_new_user(user_id: int, name: str):
     try:
         with Session() as s:
-            user = s.query(User).filter_by(name=telegram_nickname).first()
+            user = s.query(User).filter_by(user_id=user_id).first()
             if user:
                 logging.warning('User exists')
             else:
-                user = User(name=telegram_nickname)
+                user = User(user_id=user_id, name=name)
                 s.add(user)
                 s.commit()
     except Exception:
         logging.warning('User exists')
 
 
-def add_new_word(word: str, user_name: str):
-    user = get_user(user_name)
+def add_new_word(word: str, user_id: int):
+    user = get_user(user_id)
     if get_word(word):
         return
     new_word = complete_word(word)
@@ -38,8 +38,8 @@ def add_new_word(word: str, user_name: str):
         return association.word
 
 
-def request_random_word(user_name: str):
-    words = get_user_words(user_name)
+def request_random_word(user_id: int):
+    words = get_user_words(user_id)
     try:
         rnd = randint(0, len(words)-1)
     except Exception:

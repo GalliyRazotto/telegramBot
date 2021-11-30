@@ -34,9 +34,9 @@ async def cm_add_word(message: types.Message):
 @dp.message_handler(content_types=['text'], state=FSMAdmin.add_word)
 async def pull_word(message: types.Message, state: FSMContext):
     word = message.text.lower()
-    user_name = message.from_user.first_name
+    user_id = message.from_user.id
     msg = 'Word already added'
-    word_to_add = usecase.add_new_word(word, user_name)
+    word_to_add = usecase.add_new_word(word, user_id)
     if word_to_add:
         async with state.proxy() as data:
             data['word'] = word_to_add.word
@@ -47,9 +47,9 @@ async def pull_word(message: types.Message, state: FSMContext):
 
 @dp.message_handler(commands='request', state=None)
 async def request_word(message: types.Message, state: FSMContext):
-    user_name = message.from_user.first_name
+    user_id = message.from_user.id
     msg = 'No words added to dictionary'
-    word = usecase.request_random_word(user_name)
+    word = usecase.request_random_word(user_id)
     await FSMAdmin.request_word.set()
     if word:
         async with state.proxy() as data:
@@ -90,7 +90,7 @@ async def pull_word(message: types.Message, state: FSMContext):
 @dp.message_handler(CommandStart())
 async def echo(message: types.Message):
     user = types.User.get_current()
-    usecase.add_new_user(user.first_name)
+    usecase.add_new_user(user.id, user.first_name)
 
     await message.answer(
         f'Hi {user.first_name}! I am ScienceWordBot! Let me help you to learn english words! Just choose what you are '
