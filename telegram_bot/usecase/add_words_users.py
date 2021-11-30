@@ -46,9 +46,3 @@ def request_random_word(user_id: int):
         logging.warning('No words added')
         return
     return words[rnd]
-
-
-if __name__ == '__main__':
-    # add_new_word('big', 'Kirill🚯')
-    request_random_word('Kirill🚯')
-

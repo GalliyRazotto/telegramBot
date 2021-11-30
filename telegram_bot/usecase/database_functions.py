@@ -22,7 +22,3 @@ def get_user_words(user_id: int):
     with Session() as s:
         words = s.query(Word).join(User.word, Word).filter(User.user_id.__eq__(user_id)).all()
         return words
-
-
-if __name__ == '__main__':
-    get_user_words(107619430)
